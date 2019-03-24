@@ -12,49 +12,46 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var Player = /** @class */ (function () {
-    function Player(x, y, height, width) {
+var GameObject = /** @class */ (function () {
+    function GameObject(x, y, vX, vY) {
         this.x = x;
         this.y = y;
-        this.vX = 0;
-        this.vY = 0;
-        this.height = height;
-        this.width = width;
+        this.vX = vX;
+        this.vY = vY;
+    }
+    return GameObject;
+}());
+var Player = /** @class */ (function (_super) {
+    __extends(Player, _super);
+    function Player(x, y, height, width) {
+        var _this = _super.call(this, x, y, 0, 0) || this;
+        _this.height = height;
+        _this.width = width;
+        return _this;
     }
     return Player;
-}());
-function checkSpeed(p) {
-    var speed1 = Math.sqrt(p.vX * p.vX + p.vY * p.vY);
-    if (speed1 > 10) {
-        p.vX = 0;
-        p.vY = 0;
-    }
-}
+}(GameObject));
 var PlayablePlayer = /** @class */ (function (_super) {
     __extends(PlayablePlayer, _super);
     function PlayablePlayer(p) {
         return _super.call(this, p.x, p.y, p.height, p.width) || this;
     }
     PlayablePlayer.prototype.setMoveVector = function (speed, x, y) {
-        if (Math.abs(speed) > 10) {
-            speed = 0;
-        }
         var nSpeed = speed / Math.sqrt(x * x + y * y);
         this.vX = x * nSpeed;
         this.vY = y * nSpeed;
     };
     return PlayablePlayer;
 }(Player));
-var Ball = /** @class */ (function () {
+var Ball = /** @class */ (function (_super) {
+    __extends(Ball, _super);
     function Ball(diameter, x, y, vX, vY) {
-        this.diameter = diameter;
-        this.vY = vY;
-        this.vX = vX;
-        this.x = x;
-        this.y = y;
+        var _this = _super.call(this, x, y, vX, vY) || this;
+        _this.diameter = diameter;
+        return _this;
     }
     return Ball;
-}());
+}(GameObject));
 var Game = /** @class */ (function () {
     function Game(fieldHeight, fieldWidth) {
         this.fieldHeight = fieldHeight;
@@ -63,6 +60,11 @@ var Game = /** @class */ (function () {
         this.player2 = new Player(fieldWidth - fieldWidth / 10, fieldHeight / 2, fieldHeight / 5, fieldWidth / 20);
         this.ball = new Ball(10, fieldWidth / 2, fieldHeight / 2, 5, 0);
     }
+    Game.prototype.getInfo = function () {
+        return {
+            "ratio": this.fieldWidth / this.fieldHeight
+        };
+    };
     Game.prototype.getState = function () {
         return {
             "player_1": {
@@ -80,7 +82,11 @@ var Game = /** @class */ (function () {
         };
     };
     Game.prototype.isDone = function () {
-        return false;
+        if (this.ball.x - this.ball.diameter / 2 <= 0)
+            return 2;
+        if (this.ball.x + this.ball.diameter / 2 >= this.fieldWidth)
+            return 1;
+        return 0;
     };
     Game.prototype.getObjectsP1 = function () {
         return [new PlayablePlayer(this.player1), Object.assign({}, this.player2), Object.assign({}, this.ball)];
@@ -93,10 +99,6 @@ var Game = /** @class */ (function () {
     Game.prototype.ballCorrectionP1 = function () {
         if (this.player1.x + this.player1.width / 2 + this.player1.vX < this.ball.x - this.ball.diameter / 2 + this.ball.vX) {
             return false;
-        }
-        else {
-            var ballRelspeedx = this.ball.vX - this.player1.vX;
-            var ballRelspeedy = this.ball.vY - this.player1.vY;
         }
     };
     Game.prototype.ballCorrectionP2 = function () {
@@ -111,8 +113,8 @@ var Game = /** @class */ (function () {
     Game.prototype.saveObjects = function (st1, st2) {
         var p1 = st1[0];
         var p2 = st2[0];
-        checkSpeed(p1);
-        checkSpeed(p2);
+        this.checkSpeed(p1);
+        this.checkSpeed(p2);
         this.player1.vX = p1.vX;
         this.player1.vY = p1.vY;
         this.player2.vX = p2.vX;
@@ -126,6 +128,12 @@ var Game = /** @class */ (function () {
         this.p1PossitionCorrection();
         this.p2PossitionCorrection();
     };
+    // Validators
+    Game.prototype.checkSpeed = function (p) {
+        if (Math.sqrt(p.vX * p.vX + p.vY * p.vY) > 10) {
+            throw new Error("speed can not be > 10");
+        }
+    };
     return Game;
 }());
 
@@ -137,6 +145,7 @@ var Tester = /** @class */ (function () {
         this.game = g;
     }
     Tester.prototype.run = function () {
+        var winner = 0; //0 это ничья
         var ticks = [];
         for (var tick = 0; tick < this.ticksCount; tick++) {
             var p1Args = this.game.getObjectsP1();
@@ -145,11 +154,17 @@ var Tester = /** @class */ (function () {
             this.player2.apply(this, p2Args);
             this.game.saveObjects(p1Args, p2Args);
             ticks.push(this.game.getState());
-            if (this.game.isDone()) {
+            var res = this.game.isDone();
+            if (res != 0) {
+                winner = res;
                 break;
             }
         }
-        return ticks;
+        return {
+            "info": this.game.getInfo(),
+            "states": ticks,
+            "winner": winner,
+        };
     };
     return Tester;
 }());
@@ -158,24 +173,23 @@ var runCode = function (code) {
     var bot = function (me, enemy, ball) {
         me.setMoveVector(1, 0, -1);
     };
-    
     var p1 = new Function("me", "enemy", "ball", code);
     var g = new Game(250, 500);
     var t = new Tester(p1, bot, g, 10000);
-    console.log(t.run());
+    console.log(JSON.stringify(t.run()));
 };
 
-let tarea = document.createElement('textarea');
-document.body.appendChild(tarea);
 
+const tarea = document.createElement('textarea')
 let button = document.createElement('button');
-button.textContent = "Сделать прикольно";
+button.textContent = "Сделать крута";
 button.onclick = function() {
-    runCode(tarea.value)
+    try {
+        runCode(tarea.value)
+    } catch(e) {
+        alert(e)
+    }
 }
 
+document.body.appendChild(tarea);
 document.body.appendChild(button);
-
-//{
-//    me.setMoveVector(5, 1, 1);
-//}

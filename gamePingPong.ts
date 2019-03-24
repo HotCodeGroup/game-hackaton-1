@@ -117,12 +117,22 @@ class Game {
         }
     }
 
-    p1PossitionCorrection() {
+    playerPossitionCorrection(p: Player, left: number, right: number, bottom: number, top: number) {
+        if (p.x - p.width / 2 < left) {
+            p.x = left + p.width / 2;
+        }
 
-    }
+        if (p.x + p.width / 2 > right) {
+            p.x = right - p.width / 2;
+        }
+        
+        if (p.y - p.height / 2 < bottom) {
+            p.y = bottom + p.height / 2;
+        }
 
-    p2PossitionCorrection() {
-
+        if (p.y + p.height / 2 > top) {
+            p.y = top + p.height / 2;
+        }
     }
     
     saveObjects(st1: [PlayablePlayer, Player, Ball], st2: [PlayablePlayer, Player, Ball]) {
@@ -144,8 +154,8 @@ class Game {
         this.player2.x += this.player2.vX;
         this.player2.y += this.player2.vY;
 
-        this.p1PossitionCorrection();
-        this.p2PossitionCorrection();
+        this.playerPossitionCorrection(this.player1, 0, this.fieldWidth / 2, 0, this.fieldHeight);
+        this.playerPossitionCorrection(this.player2, this.fieldWidth / 2, this.fieldWidth, 0, this.fieldHeight);
     }
 
      // Validators
