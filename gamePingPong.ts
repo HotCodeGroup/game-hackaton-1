@@ -134,8 +134,9 @@ export class Game {
                 b.x += to_ratio * b.vX - out_ratio * b.vX;
                 b.y += b.vY;
                 b.vX = - b.vX;
+                alert(1);
+                return inter;
             }
-            return inter;
         }
 
         if (p_left > b_right) {
@@ -148,8 +149,9 @@ export class Game {
                 b.x += to_ratio * b.vX - out_ratio * b.vX;
                 b.y += b.vY;
                 b.vX = - b.vX;
-            }
+                alert(2);
             return inter;
+            }
         }
 
         if (p_up < b_down) {
@@ -162,8 +164,9 @@ export class Game {
                 b.y += to_ratio * b.vY - out_ratio * b.vY;
                 b.x += b.vX;
                 b.vY = - b.vY;
+                alert(3);
+                return inter;
             }
-            return inter;
         }
 
         if (p_down > b_up) {
@@ -176,8 +179,9 @@ export class Game {
                 b.y += to_ratio * b.vY - out_ratio * b.vY;
                 b.x += b.vX;
                 b.vY = - b.vY;
+                alert(4);
+                return inter;
             }
-            return inter;
         }
 
         return false;
@@ -228,8 +232,8 @@ export class Game {
         this.player2.x += this.player2.vX;
         this.player2.y += this.player2.vY;
 
-        this.playerPossitionCorrection(this.player1, 0, this.fieldWidth / 2, 0, this.fieldHeight);
-        this.playerPossitionCorrection(this.player2, this.fieldWidth / 2, this.fieldWidth, 0, this.fieldHeight);
+        this.playerPossitionCorrection(this.player1, 0, (1/3) * this.fieldWidth, 0, this.fieldHeight);
+        this.playerPossitionCorrection(this.player2, (2/3) * this.fieldWidth, this.fieldWidth, 0, this.fieldHeight);
     }
 
     // Validators
