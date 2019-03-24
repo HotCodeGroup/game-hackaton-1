@@ -21,7 +21,8 @@ class Tester {
     player2: Player;
 
     constructor(p1: Player, p2: Player, g: Game, count: number) {
-        this.player1, this.player2 = p1, p2;
+        this.player1 = p1
+        this.player2 = p2;
         this.ticksCount = count;
         this.game = g;
     }
