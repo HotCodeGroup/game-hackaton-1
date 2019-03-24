@@ -1,4 +1,3 @@
-import tester from './tester';
 import { PlayablePlayer, Player, Ball, Game } from './gamePingPong';
 import Tester from './tester';
 

@@ -15,7 +15,7 @@ class GameObject {
     }
 }
 
-class Player extends GameObject {
+export class Player extends GameObject {
     height: number;
     width: number;
 
@@ -27,7 +27,7 @@ class Player extends GameObject {
     }
 }
 
-class PlayablePlayer extends Player {
+export class PlayablePlayer extends Player {
     constructor(p: Player) {
         super(p.x, p.y, p.height, p.width);
     }
@@ -38,7 +38,7 @@ class PlayablePlayer extends Player {
         this.vY = y * nSpeed;
     }
 }
-class Ball extends GameObject {
+export class Ball extends GameObject {
     diameter: number;
     constructor(diameter: number, x: number, y: number, vX: number, vY: number) {
         super(x, y, vX, vY)
@@ -46,7 +46,7 @@ class Ball extends GameObject {
     }
 }
 
-class Game {
+export class Game {
     player1: Player;
     player2: Player;
     ball: Ball;
@@ -216,9 +216,13 @@ class Game {
         this.player2.vX = p2.vX;
         this.player2.vY = p2.vY;
 
-        this.collision(this.player1, this.ball);
-        this.collision(this.player2, this.ball);
-
+        const coll1 = this.collision(this.player1, this.ball);
+        const coll2 = this.collision(this.player2, this.ball);
+        if (!coll1 && !coll2) {
+            this.ball.x += this.ball.vX;
+            this.ball.y += this.ball.vY;
+        }
+        
         this.player1.x += this.player1.vX;
         this.player1.y += this.player1.vY;
         this.player2.x += this.player2.vX;
@@ -235,5 +239,3 @@ class Game {
         }
     }
 }
-
-export { PlayablePlayer, Player, Ball, Game };
