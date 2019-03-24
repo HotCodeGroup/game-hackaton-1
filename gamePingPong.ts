@@ -70,7 +70,20 @@ class Game {
     }
 
     getState(): any {
-        return "json"
+        return { 
+            "player_1": { 
+                "x": this.player1.x / this.fieldWidth,
+                "y": this.player1.y  / this.fieldHeight 
+            },
+            "player_2": {
+                "x": this.player2.x / this.fieldWidth,
+                "y": this.player2.y / this.fieldHeight 
+            },
+            "ball": {
+                "x": this.ball.x / this.fieldWidth,
+                "y": this.ball.y / this.fieldHeight 
+            }
+         };
     }
 
     isDone(): boolean {
