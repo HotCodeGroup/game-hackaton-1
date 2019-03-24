@@ -103,7 +103,7 @@ function collision(p: Player, b: Ball) {
             intersection(p_down, p_left, p_up, p_left, b_down, b_right, b_down + bRelVy, b_right + bRelVx) ||
             intersection(p_down, p_left, p_up, p_left, b_up, b_right, b_up + bRelVy, b_right + bRelVx);
         if (inter) {
-            let to_ratio = bRelVx / (b_left - p_right);
+            let to_ratio = bRelVx / (p_left - b_right);
             let out_ratio = 1 - to_ratio;
             b.x += to_ratio * b.vX - out_ratio * b.vX;
             b.y += b.vY;
@@ -129,7 +129,7 @@ function collision(p: Player, b: Ball) {
             intersection(p_left, p_down, p_right, p_down, b_left, b_up, b_left + bRelVx, b_up + bRelVy) ||
             intersection(p_left, p_down, p_right, p_down, b_right, b_up, b_right + bRelVx, b_up + bRelVy);
         if (inter) {
-            let to_ratio = bRelVy / (b_down - p_up);
+            let to_ratio = bRelVy / (p_down - b_up);
             let out_ratio = 1 - to_ratio;
             b.y += to_ratio * b.vY - out_ratio * b.vY;
             b.x += b.vX;
