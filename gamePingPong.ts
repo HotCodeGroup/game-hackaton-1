@@ -119,21 +119,19 @@ export class Game {
     collision(p: Player, b: Ball) {
         let bRelVx = b.vX - p.vX;
         let bRelVy = b.vY - p.vY;
-        console.log(bRelVx, bRelVy)
 
         let p_left = p.x - p.width / 2;
         let p_right = p.x + p.width / 2;
         let p_down = p.y - p.height / 2;
-        let p_up = p.x + p.height / 2;
+        let p_up = p.y + p.height / 2;
 
         let b_left = b.x - b.diameter / 2;
         let b_right = b.x + b.diameter / 2;
         let b_down = b.y - b.diameter / 2;
-        let b_up = b.x + b.diameter / 2;
+        let b_up = b.y + b.diameter / 2;
 
 
         if (p_right < b_left) {
-            console.log(p_down, p_right, p_up, p_right, b_down, b_left, b_down + bRelVy, b_left + bRelVx);
             let inter =
                 this.intersection(p_down, p_right, p_up, p_right, b_down, b_left, b_down + bRelVy, b_left + bRelVx) ||
                 this.intersection(p_down, p_right, p_up, p_right, b_up, b_left, b_up + bRelVy, b_left + bRelVx);
@@ -144,7 +142,6 @@ export class Game {
                 b.y += b.vY;
                 b.vX = - b.vX;
 
-                console.log(1);
                 return inter;
             }
         }
@@ -159,7 +156,6 @@ export class Game {
                 b.x += to_ratio * b.vX - out_ratio * b.vX;
                 b.y += b.vY;
                 b.vX = - b.vX;
-                console.log(2);
                 return inter;
             }
         }
@@ -174,7 +170,6 @@ export class Game {
                 b.y += to_ratio * b.vY - out_ratio * b.vY;
                 b.x += b.vX;
                 b.vY = - b.vY;
-                console.log(3);
                 return inter;
             }
         }
@@ -189,7 +184,6 @@ export class Game {
                 b.y += to_ratio * b.vY - out_ratio * b.vY;
                 b.x += b.vX;
                 b.vY = - b.vY;
-                console.log(4);
                 return inter;
             }
         }
