@@ -141,7 +141,6 @@ export class Game {
                 b.x += to_ratio * b.vX - out_ratio * b.vX;
                 b.y += b.vY;
                 b.vX = - b.vX;
-                alert(1);
                 return inter;
             }
         }
@@ -156,8 +155,7 @@ export class Game {
                 b.x += to_ratio * b.vX - out_ratio * b.vX;
                 b.y += b.vY;
                 b.vX = - b.vX;
-                alert(2);
-            return inter;
+                return inter;
             }
         }
 
@@ -233,14 +231,14 @@ export class Game {
             this.ball.x += this.ball.vX;
             this.ball.y += this.ball.vY;
         }
-        
+
         this.player1.x += this.player1.vX;
         this.player1.y += this.player1.vY;
         this.player2.x += this.player2.vX;
         this.player2.y += this.player2.vY;
 
-        this.playerPossitionCorrection(this.player1, 0, (1/3) * this.fieldWidth, 0, this.fieldHeight);
-        this.playerPossitionCorrection(this.player2, (2/3) * this.fieldWidth, this.fieldWidth, 0, this.fieldHeight);
+        this.playerPossitionCorrection(this.player1, 0, (1 / 3) * this.fieldWidth, 0, this.fieldHeight);
+        this.playerPossitionCorrection(this.player2, (2 / 3) * this.fieldWidth, this.fieldWidth, 0, this.fieldHeight);
     }
 
     // Validators
