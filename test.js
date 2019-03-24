@@ -64,20 +64,20 @@ var Game = /** @class */ (function () {
         this.ball = new Ball(10, fieldWidth / 2, fieldHeight / 2, 5, 0);
     }
     Game.prototype.getState = function () {
-        return JSON.stringify({ 
-            "player_1": { 
+        return {
+            "player_1": {
                 "x": this.player1.x / this.fieldWidth,
-                "y": this.player1.y  / this.fieldHeight 
+                "y": this.player1.y / this.fieldHeight
             },
             "player_2": {
                 "x": this.player2.x / this.fieldWidth,
-                "y": this.player2.y / this.fieldHeight 
+                "y": this.player2.y / this.fieldHeight
             },
             "ball": {
                 "x": this.ball.x / this.fieldWidth,
-                "y": this.ball.y / this.fieldHeight 
+                "y": this.ball.y / this.fieldHeight
             }
-         });
+        };
     };
     Game.prototype.isDone = function () {
         return false;
@@ -154,12 +154,28 @@ var Tester = /** @class */ (function () {
     return Tester;
 }());
 
-var p1 = function (me, enemy, ball) {
-    me.setMoveVector(1, 0, 1);
+var runCode = function (code) {
+    var bot = function (me, enemy, ball) {
+        me.setMoveVector(1, 0, -1);
+    };
+    
+    var p1 = new Function("me", "enemy", "ball", code);
+    var g = new Game(250, 500);
+    var t = new Tester(p1, bot, g, 10000);
+    console.log(t.run());
 };
-var p2 = function (me, enemy, ball) {
-    me.setMoveVector(1, 0, -1);
-};
-var g = new Game(250, 500);
-var t = new Tester(p1, p2, g, 10000);
-t.run()
+
+let tarea = document.createElement('textarea');
+document.body.appendChild(tarea);
+
+let button = document.createElement('button');
+button.textContent = "Сделать прикольно";
+button.onclick = function() {
+    runCode(tarea.value)
+}
+
+document.body.appendChild(button);
+
+//{
+//    me.setMoveVector(5, 1, 1);
+//}
