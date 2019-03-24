@@ -10,17 +10,13 @@ interface Game {
     saveObjects(p1: any, p2: any): void;
 }
 
-interface Player {
-    (...args: any[]): void;
-}
-
 class Tester {
     game: Game;
     ticksCount: number;
-    player1: Player;
-    player2: Player;
+    player1: Function;
+    player2: Function;
 
-    constructor(p1: Player, p2: Player, g: Game, count: number) {
+    constructor(p1: Function, p2: Function, g: Game, count: number) {
         this.player1 = p1
         this.player2 = p2;
         this.ticksCount = count;
@@ -28,16 +24,20 @@ class Tester {
     }
 
     run(): any[] {
-        let ticks: any[]
+        let ticks = [];
         for (let tick = 0; tick < this.ticksCount; tick++) {
             const p1Args = this.game.getObjectsP1();
             const p2Args = this.game.getObjectsP2();
 
-            this.player1(p1Args)
-            this.player2(p2Args)
+            this.player1(...p1Args)
+            this.player2(...p2Args)
 
             this.game.saveObjects(p1Args, p2Args)
             ticks.push(this.game.getState())
+
+            if (this.game.isDone()) {
+                break;
+            }
         }
 
         return ticks

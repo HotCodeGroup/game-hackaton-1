@@ -61,26 +61,26 @@ var Game = /** @class */ (function () {
         this.fieldWidth = fieldWidth;
         this.player1 = new Player(fieldWidth / 10, fieldHeight / 2, fieldHeight / 5, fieldWidth / 20);
         this.player2 = new Player(fieldWidth - fieldWidth / 10, fieldHeight / 2, fieldHeight / 5, fieldWidth / 20);
-        this.ball = new Ball(10, 5, 0);
+        this.ball = new Ball(10, fieldWidth / 2, fieldHeight / 2, 5, 0);
     }
     Game.prototype.getState = function () {
         return JSON.stringify({ 
             "player_1": { 
-                "x": this.player1.x,
-                "y": this.player1.y 
+                "x": this.player1.x / this.fieldWidth,
+                "y": this.player1.y  / this.fieldHeight 
             },
             "player_2": {
-                "x": this.player2.x,
-                "y": this.player2.y 
+                "x": this.player2.x / this.fieldWidth,
+                "y": this.player2.y / this.fieldHeight 
             },
             "ball": {
-                "x": this.ball.x,
-                "y": this.ball.y
+                "x": this.ball.x / this.fieldWidth,
+                "y": this.ball.y / this.fieldHeight 
             }
          });
     };
     Game.prototype.isDone = function () {
-        return true;
+        return false;
     };
     Game.prototype.getObjectsP1 = function () {
         return [new PlayablePlayer(this.player1), Object.assign({}, this.player2), Object.assign({}, this.ball)];
@@ -91,17 +91,26 @@ var Game = /** @class */ (function () {
     Game.prototype.ballPossitionCorrection = function () {
     };
     Game.prototype.ballCorrectionP1 = function () {
+        if (this.player1.x + this.player1.width / 2 + this.player1.vX < this.ball.x - this.ball.diameter / 2 + this.ball.vX) {
+            return false;
+        }
+        else {
+            var ballRelspeedx = this.ball.vX - this.player1.vX;
+            var ballRelspeedy = this.ball.vY - this.player1.vY;
+        }
     };
     Game.prototype.ballCorrectionP2 = function () {
         if (this.player1.x + this.player1.vX < this.ball.x + this.ball.vX) {
-            return;
+            return false;
         }
     };
     Game.prototype.p1PossitionCorrection = function () {
     };
     Game.prototype.p2PossitionCorrection = function () {
     };
-    Game.prototype.saveObjects = function (p1, p2) {
+    Game.prototype.saveObjects = function (st1, st2) {
+        var p1 = st1[0];
+        var p2 = st2[0];
         checkSpeed(p1);
         checkSpeed(p2);
         this.player1.vX = p1.vX;
@@ -132,10 +141,13 @@ var Tester = /** @class */ (function () {
         for (var tick = 0; tick < this.ticksCount; tick++) {
             var p1Args = this.game.getObjectsP1();
             var p2Args = this.game.getObjectsP2();
-            this.player1(...p1Args);
-            this.player2(...p2Args);
+            this.player1.apply(this, p1Args);
+            this.player2.apply(this, p2Args);
             this.game.saveObjects(p1Args, p2Args);
             ticks.push(this.game.getState());
+            if (this.game.isDone()) {
+                break;
+            }
         }
         return ticks;
     };
@@ -150,4 +162,4 @@ var p2 = function (me, enemy, ball) {
 };
 var g = new Game(250, 500);
 var t = new Tester(p1, p2, g, 10000);
-console.log(t.run());
+t.run()
