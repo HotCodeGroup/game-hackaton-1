@@ -55,6 +55,35 @@ class Ball {
     }
 }
 
+enum collision_type{
+    right,
+    left,
+    up,
+    down
+}
+
+class Box {
+    x: number;
+    y: number;
+    vX: number;
+    vY: number;
+    constructor(x: number, y: number, vX: number, vY: number){
+        this.vY = vY;
+        this.vX = vX;
+        this.x = x;
+        this.y = y;
+    }
+}
+
+function box_collision(){
+
+}
+
+function collision(p: Player, b: Ball) {
+    let bRelVx = b.vX - p.vX;
+    let bRelVy = b.vY - p.vY;
+}
+
 class Game {
     player1: Player;
     player2: Player;
@@ -71,11 +100,28 @@ class Game {
     }
 
     getState(): any {
-        return "json"
+        return {
+            "player_1": {
+                "x": this.player1.x / this.fieldWidth,
+                "y": this.player1.y / this.fieldHeight
+            },
+            "player_2": {
+                "x": this.player2.x / this.fieldWidth,
+                "y": this.player2.y / this.fieldHeight
+            },
+            "ball": {
+                "x": this.ball.x / this.fieldWidth,
+                "y": this.ball.y / this.fieldHeight
+            }
+        };
     }
 
-    isDone(): boolean {
-        return true;
+    isDone(): number {
+        if (this.ball.x - this.ball.diameter / 2 <= 0)
+            return 2;
+        if (this.ball.x + this.ball.diameter / 2 >= this.fieldWidth)
+            return 1;
+        return 0;
     }
 
     getObjectsP1(): [PlayablePlayer, Player, Ball] {
@@ -94,8 +140,7 @@ class Game {
         if (this.player1.x + this.player1.width / 2 + this.player1.vX < this.ball.x - this.ball.diameter / 2 + this.ball.vX) {
             return false;
         } else {
-            let ballRelspeedx = this.ball.vX - this.player1.vX;
-            let ballRelspeedy = this.ball.vY - this.player1.vY;
+            
         }
     }
 
