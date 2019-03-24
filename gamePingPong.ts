@@ -169,7 +169,6 @@ export class Game {
                 b.y += to_ratio * b.vY - out_ratio * b.vY;
                 b.x += b.vX;
                 b.vY = - b.vY;
-                alert(3);
                 return inter;
             }
         }
@@ -184,7 +183,6 @@ export class Game {
                 b.y += to_ratio * b.vY - out_ratio * b.vY;
                 b.x += b.vX;
                 b.vY = - b.vY;
-                alert(4);
                 return inter;
             }
         }
