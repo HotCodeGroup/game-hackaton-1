@@ -1,8 +1,10 @@
 'use strict';
 
 interface Game {
-    isDone(): boolean;
+    getInfo(): any;
+
     getState(): any;
+    isDone(): number;
 
     getObjectsP1(): any[];
     getObjectsP2(): any[];
@@ -23,7 +25,8 @@ class Tester {
         this.game = g;
     }
 
-    run(): any[] {
+    run(): any {
+        let winner = 0; //0 это ничья
         let ticks = [];
         for (let tick = 0; tick < this.ticksCount; tick++) {
             const p1Args = this.game.getObjectsP1();
@@ -35,12 +38,18 @@ class Tester {
             this.game.saveObjects(p1Args, p2Args)
             ticks.push(this.game.getState())
 
-            if (this.game.isDone()) {
+            const res = this.game.isDone()
+            if (res != 0) {
+                winner = res;
                 break;
             }
         }
 
-        return ticks
+        return {
+            "info": this.game.getInfo(),
+            "states": ticks,
+            "winner": winner,
+        }
     }
 }
 
