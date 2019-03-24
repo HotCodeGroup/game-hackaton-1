@@ -37,7 +37,6 @@ class PlayablePlayer extends Player {
         this.vY = y * nSpeed;
     }
 }
-
 class Ball {
     x: number;
     y: number;
@@ -74,12 +73,10 @@ class Game {
         return [new PlayablePlayer(this.player2), Object.assign({}, this.player1), Object.assign({}, this.ball)];
     }
 
-    
-
     saveObjects(p1: Player, p2: Player) {
         checkSpeed(p1);
         checkSpeed(p2);
-
-        
     }
 }
+
+export { PlayablePlayer, Player, Ball, Game };

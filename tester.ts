@@ -7,7 +7,7 @@ interface Game {
     getObjectsP1(): any[];
     getObjectsP2(): any[];
 
-    saveObjects(p1: any[], p2: any[]): void;
+    saveObjects(p1: any, p2: any): void;
 }
 
 interface Player {
@@ -42,3 +42,5 @@ class Tester {
         return ticks
     }
 }
+
+export default Tester;
