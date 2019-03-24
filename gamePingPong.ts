@@ -64,7 +64,14 @@ export class Game {
 
     getInfo(): any {
         return {
-            "ratio": this.fieldWidth / this.fieldHeight
+            "ratio": this.fieldWidth / this.fieldHeight,
+            "racket": {
+                "w": this.player1.width / this.fieldWidth,
+                "h": this.player1.height / this.fieldHeight,
+            },
+            "ball": {
+                "diameter": this.ball.diameter / this.fieldHeight,
+            }
         }
     }
 
