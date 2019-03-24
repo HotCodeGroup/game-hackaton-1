@@ -85,6 +85,7 @@ function collision(p: Player, b: Ball) {
     let b_down = b.y - b.diameter / 2;
     let b_up = b.x + b.diameter / 2;
 
+
     if (p_right < b_left) {
         let inter =
             intersection(p_down, p_right, p_up, p_right, b_down, b_left, b_down + bRelVy, b_left + bRelVx) ||
@@ -96,6 +97,7 @@ function collision(p: Player, b: Ball) {
             b.y += b.vY;
             b.vX = - b.vX;
         }
+        return inter;
     }
 
     if (p_left > b_right) {
@@ -109,6 +111,7 @@ function collision(p: Player, b: Ball) {
             b.y += b.vY;
             b.vX = - b.vX;
         }
+        return inter;
     }
 
     if (p_up < b_down) {
@@ -122,6 +125,7 @@ function collision(p: Player, b: Ball) {
             b.x += b.vX;
             b.vY = - b.vY;
         }
+        return inter;
     }
 
     if (p_down > b_up) {
@@ -135,7 +139,10 @@ function collision(p: Player, b: Ball) {
             b.x += b.vX;
             b.vY = - b.vY;
         }
+        return inter;
     }
+
+    return false;
 }
 
 class Game {
@@ -191,17 +198,11 @@ class Game {
     }
 
     ballCorrectionP1(): boolean {
-        if (this.player1.x + this.player1.width / 2 + this.player1.vX < this.ball.x - this.ball.diameter / 2 + this.ball.vX) {
-            return false;
-        } else {
-
-        }
+        return collision(this.player1, this.ball);
     }
 
     ballCorrectionP2(): boolean {
-        if (this.player1.x + this.player1.vX < this.ball.x + this.ball.vX) {
-            return false;
-        }
+        return collision(this.player2, this.ball);
     }
 
     p1PossitionCorrection() {
