@@ -1,0 +1,145 @@
+<h1 id="ping-pong">Ping Pong</h1>
+<h2 id="общие-сведения">Общие сведения</h2>
+<p>Ping Pong является простым спортивным симулятором настольного тенниса.<br />
+<a href="#ball">Мячик</a>, двигается по экрану по линейной траектории. Если он ударяется о периметр игрового поля, то его траектория изменяется в зависимости от угла столкновения. Если <a href="#ball">мячик</a> отбивается ракеткой <a href="#me">игрока</a>, то его движение дополнительно зависит от скорости и направления движения ракетки.</p>
+<p>Игровой процесс состоит в том, что <a href="#me">игроки</a> передвигают свои ракетки вертикально для защиты своих ворот.</p>
+<h2 id="объекты">Объекты</h2>
+<h3 id="ball">Ball</h3>
+<p>Предоставляет доступ к информации о мячике на экране;</p>
+<h4 id="методы">Методы</h4>
+<ul>
+<li><code>getX():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>x: double;</code><br />
+Координата X центра мячика на поле</li>
+</ul></li>
+<li><code>getY():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>y: double;</code><br />
+Координата Y центра мячика на поле</li>
+</ul></li>
+<li><code>getRadius():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>radius: double;</code><br />
+Размер стороны мячика</li>
+</ul></li>
+</ul>
+<h3 id="me">Me</h3>
+<p>Предоставляет доступ к своей ракетке;</p>
+<h4 id="методы-1">Методы</h4>
+<ul>
+<li><code>getX():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>x: double;</code><br />
+Координата X центра ракетки на поле</li>
+</ul></li>
+<li><code>getY():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>y: double;</code><br />
+Координата Y центра ракетки на поле</li>
+</ul></li>
+<li><code>getWidth():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>width: double;</code><br />
+Width ширина ракетки</li>
+</ul></li>
+<li><code>getHeight():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>height: double;</code><br />
+Height высота ракетки</li>
+</ul></li>
+<li><code>setMoveVector():</code></li>
+<li>Параметры:
+<ul>
+<li><code>speed: double;</code><br />
+Модуль вектора движения ракетки(скорость)</li>
+<li><code>x: double;</code><br />
+X координата направления движения</li>
+<li><code>y: double;</code><br />
+Y координата направления движения</li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>void</code></li>
+</ul></li>
+</ul>
+<h3 id="enemy">Enemy</h3>
+<p>Предоставляет доступ к информации о ракетке соперника;</p>
+<h4 id="методы-2">Методы</h4>
+<ul>
+<li><code>getX():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>x: double;</code><br />
+Координата X центра ракетки на поле</li>
+</ul></li>
+<li><code>getY():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>y: double;</code><br />
+Координата Y центра ракетки на поле</li>
+</ul></li>
+<li><code>getWidth():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>width: double;</code><br />
+Width ширина ракетки</li>
+</ul></li>
+<li><code>getHeight():</code></li>
+<li>Параметры:
+<ul>
+<li><code>void</code></li>
+</ul></li>
+<li>Возвращаемые значения
+<ul>
+<li><code>height: double;</code><br />
+Height высота ракетки</li>
+</ul></li>
+</ul>
