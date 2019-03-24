@@ -1,14 +1,18 @@
 'use strict';
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+exports.__esModule = true;
 var GameObject = /** @class */ (function () {
     function GameObject(x, y, vX, vY) {
         this.x = x;
@@ -24,11 +28,12 @@ var Player = /** @class */ (function (_super) {
         var _this = _super.call(this, x, y, 0, 0) || this;
         _this.height = height;
         _this.width = width;
+        1;
         return _this;
     }
     return Player;
 }(GameObject));
-export { Player };
+exports.Player = Player;
 var PlayablePlayer = /** @class */ (function (_super) {
     __extends(PlayablePlayer, _super);
     function PlayablePlayer(p) {
@@ -41,7 +46,7 @@ var PlayablePlayer = /** @class */ (function (_super) {
     };
     return PlayablePlayer;
 }(Player));
-export { PlayablePlayer };
+exports.PlayablePlayer = PlayablePlayer;
 var Ball = /** @class */ (function (_super) {
     __extends(Ball, _super);
     function Ball(diameter, x, y, vX, vY) {
@@ -51,7 +56,7 @@ var Ball = /** @class */ (function (_super) {
     }
     return Ball;
 }(GameObject));
-export { Ball };
+exports.Ball = Ball;
 var Game = /** @class */ (function () {
     function Game(fieldHeight, fieldWidth) {
         this.fieldHeight = fieldHeight;
@@ -99,11 +104,12 @@ var Game = /** @class */ (function () {
         var v2 = (bx2 - bx1) * (ay2 - by1) - (by2 - by1) * (ax2 - bx1);
         var v3 = (ax2 - ax1) * (by1 - ay1) - (ay2 - ay1) * (bx1 - ax1);
         var v4 = (ax2 - ax1) * (by2 - ay1) - (ay2 - ay1) * (bx2 - ax1);
-        return (v1 * v2 < 0) && (v3 * v4 < 0);
+        return ((v1 * v2 < 0) && (v3 * v4 < 0)) || (ax1 == bx1 && ay1 == by1) || (ax2 == bx2 && ay1 == by1) || (ax1 == bx1 && ay2 == by2) || (ax2 == bx2 && ay2 == by2);
     };
     Game.prototype.collision = function (p, b) {
         var bRelVx = b.vX - p.vX;
         var bRelVy = b.vY - p.vY;
+        console.log(bRelVx, bRelVy);
         var p_left = p.x - p.width / 2;
         var p_right = p.x + p.width / 2;
         var p_down = p.y - p.height / 2;
@@ -113,6 +119,7 @@ var Game = /** @class */ (function () {
         var b_down = b.y - b.diameter / 2;
         var b_up = b.x + b.diameter / 2;
         if (p_right < b_left) {
+            console.log(p_down, p_right, p_up, p_right, b_down, b_left, b_down + bRelVy, b_left + bRelVx);
             var inter = this.intersection(p_down, p_right, p_up, p_right, b_down, b_left, b_down + bRelVy, b_left + bRelVx) ||
                 this.intersection(p_down, p_right, p_up, p_right, b_up, b_left, b_up + bRelVy, b_left + bRelVx);
             if (inter) {
@@ -121,8 +128,9 @@ var Game = /** @class */ (function () {
                 b.x += to_ratio * b.vX - out_ratio * b.vX;
                 b.y += b.vY;
                 b.vX = -b.vX;
+                console.log(1);
+                return inter;
             }
-            return inter;
         }
         if (p_left > b_right) {
             var inter = this.intersection(p_down, p_left, p_up, p_left, b_down, b_right, b_down + bRelVy, b_right + bRelVx) ||
@@ -133,8 +141,9 @@ var Game = /** @class */ (function () {
                 b.x += to_ratio * b.vX - out_ratio * b.vX;
                 b.y += b.vY;
                 b.vX = -b.vX;
+                console.log(2);
+                return inter;
             }
-            return inter;
         }
         if (p_up < b_down) {
             var inter = this.intersection(p_left, p_up, p_right, p_up, b_left, b_down, b_left + bRelVx, b_down + bRelVy) ||
@@ -145,8 +154,9 @@ var Game = /** @class */ (function () {
                 b.y += to_ratio * b.vY - out_ratio * b.vY;
                 b.x += b.vX;
                 b.vY = -b.vY;
+                console.log(3);
+                return inter;
             }
-            return inter;
         }
         if (p_down > b_up) {
             var inter = this.intersection(p_left, p_down, p_right, p_down, b_left, b_up, b_left + bRelVx, b_up + bRelVy) ||
@@ -157,8 +167,9 @@ var Game = /** @class */ (function () {
                 b.y += to_ratio * b.vY - out_ratio * b.vY;
                 b.x += b.vX;
                 b.vY = -b.vY;
+                console.log(4);
+                return inter;
             }
-            return inter;
         }
         return false;
     };
@@ -197,8 +208,8 @@ var Game = /** @class */ (function () {
         this.player1.y += this.player1.vY;
         this.player2.x += this.player2.vX;
         this.player2.y += this.player2.vY;
-        this.playerPossitionCorrection(this.player1, 0, this.fieldWidth / 2, 0, this.fieldHeight);
-        this.playerPossitionCorrection(this.player2, this.fieldWidth / 2, this.fieldWidth, 0, this.fieldHeight);
+        this.playerPossitionCorrection(this.player1, 0, (1 / 3) * this.fieldWidth, 0, this.fieldHeight);
+        this.playerPossitionCorrection(this.player2, (2 / 3) * this.fieldWidth, this.fieldWidth, 0, this.fieldHeight);
     };
     // Validators
     Game.prototype.checkSpeed = function (p) {
@@ -208,4 +219,6 @@ var Game = /** @class */ (function () {
     };
     return Game;
 }());
-export { Game };
+exports.Game = Game;
+var p = new Player(0, 0, 14, 1);
+var b = new Ball(1, 3, 0, -4, 0);

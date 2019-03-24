@@ -1,0 +1,1 @@
+Game.prototype.collision(p, b)
