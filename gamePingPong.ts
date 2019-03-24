@@ -64,7 +64,14 @@ export class Game {
 
     getInfo(): any {
         return {
-            "ratio": this.fieldWidth / this.fieldHeight
+            "ratio": this.fieldWidth / this.fieldHeight,
+            "racket": {
+                "w": this.player1.width / this.fieldWidth,
+                "h": this.player1.height / this.fieldHeight,
+            },
+            "ball": {
+                "diameter": this.ball.diameter / this.fieldHeight,
+            }
         }
     }
 
@@ -136,6 +143,7 @@ export class Game {
                 b.x += to_ratio * b.vX - out_ratio * b.vX;
                 b.y += b.vY;
                 b.vX = - b.vX;
+
                 console.log(1);
                 return inter;
             }
@@ -207,7 +215,7 @@ export class Game {
         }
 
         if (p.y + p.height / 2 > top) {
-            p.y = top + p.height / 2;
+            p.y = top - p.height / 2;
         }
     }
 
