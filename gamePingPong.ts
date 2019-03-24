@@ -20,7 +20,7 @@ class Player extends GameObject {
     width: number;
 
     constructor(x: number, y: number, height: number, width: number) {
-        super(x, y, 0, 0); 
+        super(x, y, 0, 0);
 
         this.height = height;
         this.width = width;
@@ -101,20 +101,90 @@ class Game {
         return [new PlayablePlayer(this.player2), Object.assign({}, this.player1), Object.assign({}, this.ball)];
     }
 
+    intersection(ax1: number, ay1: number, ax2: number, ay2: number, bx1: number, by1: number, bx2: number, by2: number): boolean {
+        let v1 = (bx2 - bx1) * (ay1 - by1) - (by2 - by1) * (ax1 - bx1);
+        let v2 = (bx2 - bx1) * (ay2 - by1) - (by2 - by1) * (ax2 - bx1);
+        let v3 = (ax2 - ax1) * (by1 - ay1) - (ay2 - ay1) * (bx1 - ax1);
+        let v4 = (ax2 - ax1) * (by2 - ay1) - (ay2 - ay1) * (bx2 - ax1);
+        return (v1 * v2 < 0) && (v3 * v4 < 0);
+    }
+
+    collision(p: Player, b: Ball) {
+        let bRelVx = b.vX - p.vX;
+        let bRelVy = b.vY - p.vY;
+
+        let p_left = p.x - p.width / 2;
+        let p_right = p.x + p.width / 2;
+        let p_down = p.y - p.height / 2;
+        let p_up = p.x + p.height / 2;
+
+        let b_left = b.x - b.diameter / 2;
+        let b_right = b.x + b.diameter / 2;
+        let b_down = b.y - b.diameter / 2;
+        let b_up = b.x + b.diameter / 2;
+
+
+        if (p_right < b_left) {
+            let inter =
+                this.intersection(p_down, p_right, p_up, p_right, b_down, b_left, b_down + bRelVy, b_left + bRelVx) ||
+                this.intersection(p_down, p_right, p_up, p_right, b_up, b_left, b_up + bRelVy, b_left + bRelVx);
+            if (inter) {
+                let to_ratio = bRelVx / (b_left - p_right);
+                let out_ratio = 1 - to_ratio;
+                b.x += to_ratio * b.vX - out_ratio * b.vX;
+                b.y += b.vY;
+                b.vX = - b.vX;
+            }
+            return inter;
+        }
+
+        if (p_left > b_right) {
+            let inter =
+                this.intersection(p_down, p_left, p_up, p_left, b_down, b_right, b_down + bRelVy, b_right + bRelVx) ||
+                this.intersection(p_down, p_left, p_up, p_left, b_up, b_right, b_up + bRelVy, b_right + bRelVx);
+            if (inter) {
+                let to_ratio = bRelVx / (p_left - b_right);
+                let out_ratio = 1 - to_ratio;
+                b.x += to_ratio * b.vX - out_ratio * b.vX;
+                b.y += b.vY;
+                b.vX = - b.vX;
+            }
+            return inter;
+        }
+
+        if (p_up < b_down) {
+            let inter =
+                this.intersection(p_left, p_up, p_right, p_up, b_left, b_down, b_left + bRelVx, b_down + bRelVy) ||
+                this.intersection(p_left, p_up, p_right, p_up, b_right, b_down, b_right + bRelVx, b_down + bRelVy);
+            if (inter) {
+                let to_ratio = bRelVy / (b_down - p_up);
+                let out_ratio = 1 - to_ratio;
+                b.y += to_ratio * b.vY - out_ratio * b.vY;
+                b.x += b.vX;
+                b.vY = - b.vY;
+            }
+            return inter;
+        }
+
+        if (p_down > b_up) {
+            let inter =
+                this.intersection(p_left, p_down, p_right, p_down, b_left, b_up, b_left + bRelVx, b_up + bRelVy) ||
+                this.intersection(p_left, p_down, p_right, p_down, b_right, b_up, b_right + bRelVx, b_up + bRelVy);
+            if (inter) {
+                let to_ratio = bRelVy / (p_down - b_up);
+                let out_ratio = 1 - to_ratio;
+                b.y += to_ratio * b.vY - out_ratio * b.vY;
+                b.x += b.vX;
+                b.vY = - b.vY;
+            }
+            return inter;
+        }
+
+        return false;
+    }
+
     ballPossitionCorrection() {
 
-    }
-
-    ballCorrectionP1(): boolean {
-        if (this.player1.x + this.player1.width / 2 + this.player1.vX < this.ball.x - this.ball.diameter / 2 + this.ball.vX) {
-            return false;
-        }
-    }
-
-    ballCorrectionP2(): boolean {
-        if (this.player1.x + this.player1.vX < this.ball.x + this.ball.vX) {
-            return false;
-        }
     }
 
     playerPossitionCorrection(p: Player, left: number, right: number, bottom: number, top: number) {
@@ -125,7 +195,7 @@ class Game {
         if (p.x + p.width / 2 > right) {
             p.x = right - p.width / 2;
         }
-        
+
         if (p.y - p.height / 2 < bottom) {
             p.y = bottom + p.height / 2;
         }
@@ -134,7 +204,7 @@ class Game {
             p.y = top + p.height / 2;
         }
     }
-    
+
     saveObjects(st1: [PlayablePlayer, Player, Ball], st2: [PlayablePlayer, Player, Ball]) {
         let p1 = st1[0];
         let p2 = st2[0];
@@ -146,8 +216,8 @@ class Game {
         this.player2.vX = p2.vX;
         this.player2.vY = p2.vY;
 
-        this.ballCorrectionP1();
-        this.ballCorrectionP2();
+        this.collision(this.player1, this.ball);
+        this.collision(this.player2, this.ball);
 
         this.player1.x += this.player1.vX;
         this.player1.y += this.player1.vY;
@@ -158,8 +228,8 @@ class Game {
         this.playerPossitionCorrection(this.player2, this.fieldWidth / 2, this.fieldWidth, 0, this.fieldHeight);
     }
 
-     // Validators
-     checkSpeed(p: Player) {
+    // Validators
+    checkSpeed(p: Player) {
         if (Math.sqrt(p.vX * p.vX + p.vY * p.vY) > 10) {
             throw new Error("speed can not be > 10")
         }
