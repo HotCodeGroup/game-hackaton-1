@@ -46,10 +46,12 @@ class Ball {
     vX: number;
     vY: number;
     diameter: number;
-    constructor(diameter: number, vX: number, vY: number) {
+    constructor(diameter: number, x: number, y: number, vX: number, vY: number) {
         this.diameter = diameter;
         this.vY = vY;
         this.vX = vX;
+        this.x = x;
+        this.y = y;
     }
 }
 
@@ -65,7 +67,7 @@ class Game {
         this.fieldWidth = fieldWidth;
         this.player1 = new Player(fieldWidth / 10, fieldHeight / 2, fieldHeight / 5, fieldWidth / 20);
         this.player2 = new Player(fieldWidth - fieldWidth / 10, fieldHeight / 2, fieldHeight / 5, fieldWidth / 20);
-        this.ball = new Ball(10, 5, 0);
+        this.ball = new Ball(10, fieldWidth / 2, fieldHeight / 2, 5, 0);
     }
 
     getState(): any {
@@ -88,17 +90,18 @@ class Game {
 
     }
 
-    ballCorrectionP1() {
-        if (this.player1.x + this.player1.vX < this.ball.x + this.ball.vX) {
-            return;
-        }else{
-            
+    ballCorrectionP1(): boolean {
+        if (this.player1.x + this.player1.width / 2 + this.player1.vX < this.ball.x - this.ball.diameter / 2 + this.ball.vX) {
+            return false;
+        } else {
+            let ballRelspeedx = this.ball.vX - this.player1.vX;
+            let ballRelspeedy = this.ball.vY - this.player1.vY;
         }
     }
 
-    ballCorrectionP2() {
+    ballCorrectionP2(): boolean {
         if (this.player1.x + this.player1.vX < this.ball.x + this.ball.vX) {
-            return;
+            return false;
         }
     }
 
@@ -110,7 +113,9 @@ class Game {
 
     }
 
-    saveObjects(p1: Player, p2: Player) {
+    saveObjects(st1: [PlayablePlayer, Player, Ball], st2: [PlayablePlayer, Player, Ball]) {
+        let p1 = st1[0];
+        let p2 = st2[0];
         checkSpeed(p1);
         checkSpeed(p2);
 
